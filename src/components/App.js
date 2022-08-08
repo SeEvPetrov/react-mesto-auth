@@ -5,6 +5,7 @@ import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import Register from "./Register";
+import Login from "./Login";
 import EditProfilePopup from "./EditProfilePopup";
 import AddPlacePopup from "./AddPlacePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -180,6 +181,7 @@ function App() {
         /> 
         </Routes>
         <Register />
+        <Login />
 
 
         <EditProfilePopup

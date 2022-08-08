@@ -2,11 +2,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px 0 80px;
+  padding: 15px 0 0;
 }
 
 @media (max-width: 720px) {
     .register__question-container {
-        padding: 20px 0 40px;
+        padding: 20px 0 0;
     }
   }
