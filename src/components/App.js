@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import api from "../utils/Api";
 import Header from "./Header";
 import Main from "./Main";
@@ -11,6 +12,7 @@ import ConfirmPopup from "./ConfirmPopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
+  const navigate = useNavigate();
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -21,6 +23,7 @@ function App() {
     name: "Гружу...",
     about: "еще чуть чуть",
   });
+  const [email, setEmail] = useState('practicum@yandex.ru');
 
   useEffect(() => {
     api
@@ -150,19 +153,32 @@ function App() {
 
   return (
     <div className="page">
-      <Header />
       <CurrentUserContext.Provider value={currentUser}>
-        <Main
-          cards={cards}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-          onConfirmClick={handleConfirmDeleteClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        />
-        <Footer />
+        <Routes>
+          <Route 
+            path='/'
+            element={
+          <>
+          <Header 
+            email={email}
+            toLink={'/'}
+            textLink={'Выйти'}/>
+          <Main
+            cards={cards}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onConfirmClick={handleConfirmDeleteClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
+          <Footer />
+          </>
+         }
+        /> 
+        </Routes>
+
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
