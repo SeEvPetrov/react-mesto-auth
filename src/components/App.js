@@ -4,6 +4,7 @@ import api from "../utils/Api";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
+import Register from "./Register";
 import EditProfilePopup from "./EditProfilePopup";
 import AddPlacePopup from "./AddPlacePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -178,6 +179,8 @@ function App() {
          }
         /> 
         </Routes>
+        <Register />
+
 
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
