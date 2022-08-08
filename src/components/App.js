@@ -1,16 +1,20 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
+
 import api from "../utils/Api";
+
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
 import Register from "./Register";
 import Login from "./Login";
+import ProtectedRoute from "./ProtectedRoute";
 import EditProfilePopup from "./EditProfilePopup";
 import AddPlacePopup from "./AddPlacePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import ImagePopup from "./ImagePopup";
 import ConfirmPopup from "./ConfirmPopup";
+import InfoTooltip from "./InfoTooltip";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
@@ -26,6 +30,7 @@ function App() {
     about: "еще чуть чуть",
   });
   const [email, setEmail] = useState('practicum@yandex.ru');
+  const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
     api
@@ -179,11 +184,27 @@ function App() {
           </>
          }
         /> 
+        
+        {/* <Route
+            path='/sign-up'
+            element={<Register />}
+          />
+          <Route
+            path='/sign-in'
+            element={<Login />}
+          />
+          <Route
+            path='*'
+            element={
+              loggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
+            }
+          /> */}
         </Routes>
         <Register />
         <Login />
+        <InfoTooltip />
 
-
+  
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

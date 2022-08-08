@@ -3,7 +3,7 @@ import Header from "./Header";
 const Login = (props) => {
   return (
     <>
-      <Header textLink={"Войти"} toLink={"/sign-up"} />
+      <Header textLink={"Регистрация"} toLink={"/sign-up"} />
       <form className="register" action="#">
         <fieldset className="register__fieldset">
           <h2 className="register__title">Вход</h2>
