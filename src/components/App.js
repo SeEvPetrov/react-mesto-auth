@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 
 import api from "../utils/Api";
-import * as Auth from "../utils/auth";
+import * as Auth from "../utils/Auth";
 
 import Header from "./Header";
 import Main from "./Main";
@@ -280,9 +280,7 @@ function App() {
             element={<Register onRegister={onRegister} />}
           />
 
-          <Route 
-            path="/sign-in" 
-            element={<Login onLogin={onLogin} />} />
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
 
           <Route
             path="*"
