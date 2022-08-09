@@ -35,20 +35,37 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [message, setMessage] = useState(false);
 
-  
+  const isModalOpen =
+    isEditProfilePopupOpen ||
+    isAddPlacePopupOpen ||
+    isEditAvatarPopupOpen ||
+    selectedCard.link ||
+    isInfoTooltipOpen;
+
+  useEffect(() => {
+    const closeByEscape = (evt) => {
+      if (evt.key === "Escape") {
+        closeAllPopups();
+      }
+    };
+    if (isModalOpen) {
+      document.addEventListener("keydown", closeByEscape);
+      return () => {
+        document.removeEventListener("keydown", closeByEscape);
+      };
+    }
+  }, [isModalOpen]);
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem("jwt");
     console.log(jwt);
     if (jwt) {
-      Auth
-        .checkToken(jwt)
+      Auth.checkToken(jwt)
         .then((res) => {
           console.log(res);
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
-
           }
         })
         .catch((err) => {
@@ -57,16 +74,8 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (loggedIn) {
-      console.log(loggedIn);
-      navigate('/');
-    }
-  }, [loggedIn]);
-
   const onRegister = (password, email) => {
-    Auth
-      .register(password, email)
+    Auth.register(password, email)
       .then((data) => {
         setMessage(true);
         navigate("/sign-in");
@@ -81,8 +90,7 @@ function App() {
   };
 
   const onLogin = (password, email) => {
-    Auth
-      .authorize(password, email)
+    Auth.authorize(password, email)
       .then((data) => {
         console.log(data);
         if (data.token) {
@@ -96,9 +104,8 @@ function App() {
       });
   };
 
-  
-
   useEffect(() => {
+    tokenCheck();
     api
       .getInitialCards()
       .then((res) => {
@@ -118,9 +125,15 @@ function App() {
   }, []);
 
   useEffect(() => {
-    tokenCheck();
-  }, []);
+    if (loggedIn) {
+      navigate("/");
+    }
+  }, [loggedIn]);
 
+  const onSignOut = () => {
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+  };
 
   // функция постановки и снятия лайка
   function handleCardLike(card) {
@@ -227,6 +240,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setSelectedCard({ name: "", link: "" });
     setIsConfirmPopupOpen(false);
+    setIsInfoTooltipOpen(false);
   };
 
   return (
@@ -237,7 +251,12 @@ function App() {
             path="/"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Header email={email} toLink={"/"} textLink={"Выйти"} />
+                <Header
+                  email={email}
+                  toLink={"/"}
+                  textLink={"Выйти"}
+                  onSignOut={onSignOut}
+                />
                 <Main
                   cards={cards}
                   onEditProfile={handleEditProfileClick}
@@ -283,6 +302,11 @@ function App() {
         />
         <ConfirmPopup isOpen={isConfirmPopupOpen} onClose={closeAllPopups} />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <InfoTooltip
+          onClose={closeAllPopups}
+          isOpen={isInfoTooltipOpen}
+          message={message}
+        />
       </CurrentUserContext.Provider>
     </div>
   );

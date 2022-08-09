@@ -1,21 +1,19 @@
 import imageSuccess from "../images/Ok.svg";
 import imageError from "../images/no.svg";
 
-const InfoTooltip = (props) => {
+const InfoTooltip = ({isOpen, onClose, message}) => {
   return (
     <div
-      className={`popup popup_opened`}
-      //   id={props.name}
-      //   onClick={props.onClick}
+      className={`popup ${isOpen && "popup_opened"}`}
     >
       <div className={"popup__container popup__container_type_auth"}>
         <img
           className="popup__image-auth"
           alt=""
-          src={props.isOk ? imageSuccess : imageError}
+          src={message ? imageSuccess : imageError}
         />
         <p className="popup__caption_type_auth">
-          {props.isOk
+          {message
             ? "Вы успешно зарегистрировались!"
             : "Что-то пошло не так! Попробуйте ещё раз."}
         </p>
@@ -23,7 +21,7 @@ const InfoTooltip = (props) => {
           className={"popup__button-close"}
           type="button"
           aria-label="Закрыть форму"
-          onClick={props.onClose}
+          onClick={onClose}
         />
       </div>
     </div>
