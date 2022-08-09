@@ -1,10 +1,32 @@
 import Header from "./Header";
+import { useState } from "react";
 
-const Login = (props) => {
+const Login = ({ onLogin }) => {
+  const [loginData, setLoginData] = useState({
+    password: '',
+    email: '',
+});
+
+// const [message, setMessage] = useState('');
+
+const hendleChangeInput = (e) => {
+  const {name, value} = e.target;
+  setLoginData({
+    ...loginData,
+    [name]: value,
+  });
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const {  password, email } = loginData;
+  onLogin( password, email );
+};
+
   return (
     <>
       <Header textLink={"Регистрация"} toLink={"/sign-up"} />
-      <form className="register" action="#">
+      <form className="register" action="#" onSubmit={handleSubmit}>
         <fieldset className="register__fieldset">
           <h2 className="register__title">Вход</h2>
 
@@ -15,8 +37,8 @@ const Login = (props) => {
               name="email"
               placeholder="Email"
               autoComplete="off"
-              onChange={props.email}
-              value={props.handleChangeInput}
+              onChange={hendleChangeInput}
+              value={loginData.email}
               minLength="5"
               maxLength="40"
               required
@@ -29,8 +51,8 @@ const Login = (props) => {
               name="password"
               placeholder="Пароль"
               autoComplete="off"
-              onChange={props.password}
-              value={props.handleChangeInput}
+              onChange={hendleChangeInput}
+              value={loginData.password}
               minLength="5"
               maxLength="40"
               required

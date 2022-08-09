@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 
 import api from "../utils/Api";
+import * as Auth from "../utils/auth";
 
 import Header from "./Header";
 import Main from "./Main";
@@ -29,8 +30,73 @@ function App() {
     name: "Гружу...",
     about: "еще чуть чуть",
   });
-  const [email, setEmail] = useState('practicum@yandex.ru');
+  const [email, setEmail] = useState("practicum@yandex.ru");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [message, setMessage] = useState(false);
+
+  
+
+  const tokenCheck = () => {
+    const jwt = localStorage.getItem("jwt");
+    console.log(jwt);
+    if (jwt) {
+      Auth
+        .checkToken(jwt)
+        .then((res) => {
+          console.log(res);
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.data.email);
+
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      console.log(loggedIn);
+      navigate('/');
+    }
+  }, [loggedIn]);
+
+  const onRegister = (password, email) => {
+    Auth
+      .register(password, email)
+      .then((data) => {
+        setMessage(true);
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        setMessage(false);
+        console.error(err);
+      })
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
+      });
+  };
+
+  const onLogin = (password, email) => {
+    Auth
+      .authorize(password, email)
+      .then((data) => {
+        console.log(data);
+        if (data.token) {
+          localStorage.setItem("jwt", data.token);
+        }
+        setEmail(email);
+        setLoggedIn(true);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  
 
   useEffect(() => {
     api
@@ -50,6 +116,11 @@ function App() {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+
 
   // функция постановки и снятия лайка
   function handleCardLike(card) {
@@ -162,49 +233,39 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <Routes>
-          <Route 
-            path='/'
-            element={
-          <>
-          <Header 
-            email={email}
-            toLink={'/'}
-            textLink={'Выйти'}/>
-          <Main
-            cards={cards}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onConfirmClick={handleConfirmDeleteClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
-          <Footer />
-          </>
-         }
-        /> 
-        
-        {/* <Route
-            path='/sign-up'
-            element={<Register />}
-          />
           <Route
-            path='/sign-in'
-            element={<Login />}
-          />
-          <Route
-            path='*'
+            path="/"
             element={
-              loggedIn ? <Navigate to='/' /> : <Navigate to='/sign-in' />
+              <ProtectedRoute loggedIn={loggedIn}>
+                <Header email={email} toLink={"/"} textLink={"Выйти"} />
+                <Main
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  onConfirmClick={handleConfirmDeleteClick}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+                <Footer />
+              </ProtectedRoute>
             }
-          /> */}
-        </Routes>
-        <Register />
-        <Login />
-        <InfoTooltip />
+          />
 
-  
+          <Route
+            path="/sign-up"
+            element={<Register onRegister={onRegister} />}
+          />
+          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+          <Route
+            path="*"
+            element={
+              loggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />
+            }
+          />
+        </Routes>
+
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

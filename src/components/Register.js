@@ -1,11 +1,35 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import Header from "./Header";
 
-const Register = (props) => {
+const Register = ({ onRegister }) => {
+  const [registerData, setRegisterData] = useState({
+    password: '',
+    email: '',
+    
+});
+
+
+// const [message, setMessage] = useState('');
+
+const hendleChangeInput = (e) => {
+  const {name, value} = e.target;
+  setRegisterData({
+    ...registerData,
+    [name]: value,
+  });
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  const { email, password} = registerData;
+  onRegister( password, email);
+};
+
   return (
     <>
       <Header textLink={"Войти"} toLink={"/sign-in"} />
-      <form className="register" action="#">
+      <form className="register" action="#" onSubmit={handleSubmit}>
         <fieldset className="register__fieldset">
           <h2 className="register__title">Регистрация</h2>
 
@@ -16,8 +40,8 @@ const Register = (props) => {
               name="email"
               placeholder="Email"
               autoComplete="off"
-              onChange={props.email}
-              value={props.handleChangeInput}
+              onChange={hendleChangeInput}
+              value={registerData.email}
               minLength="5"
               maxLength="40"
               required
@@ -30,8 +54,8 @@ const Register = (props) => {
               name="password"
               placeholder="Пароль"
               autoComplete="off"
-              onChange={props.password}
-              value={props.handleChangeInput}
+              onChange={hendleChangeInput}
+              value={registerData.password}
               minLength="5"
               maxLength="40"
               required

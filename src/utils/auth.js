@@ -17,20 +17,20 @@ export const register = (password, email) => {
   }).then(checkResponse);
 };
 
-export const authorize = (email, password) => {
+export const authorize = (password, email) => {
   return fetch(`${BASE_URL}/signin`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      email: email,
       password: password,
+      email: email,
     }),
   }).then(checkResponse);
 };
 
-export const tokenCheck = (token) => {
+export const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
