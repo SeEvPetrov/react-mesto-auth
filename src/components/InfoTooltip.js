@@ -1,11 +1,9 @@
 import imageSuccess from "../images/Ok.svg";
 import imageError from "../images/no.svg";
 
-const InfoTooltip = ({isOpen, onClose, message}) => {
+const InfoTooltip = ({ isOpen, onClose, message }) => {
   return (
-    <div
-      className={`popup ${isOpen && "popup_opened"}`}
-    >
+    <div className={`popup ${isOpen && "popup_opened"}`}>
       <div className={"popup__container popup__container_type_auth"}>
         <img
           className="popup__image-auth"
