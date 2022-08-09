@@ -30,7 +30,7 @@ function App() {
     name: "Гружу...",
     about: "еще чуть чуть",
   });
-  const [email, setEmail] = useState("practicum@yandex.ru");
+  const [email, setEmail] = useState("mesto@ya.ru");
   const [loggedIn, setLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [message, setMessage] = useState(false);
@@ -42,6 +42,7 @@ function App() {
     selectedCard.link ||
     isInfoTooltipOpen;
 
+  // закрываем попапы по кнопке esc
   useEffect(() => {
     const closeByEscape = (evt) => {
       if (evt.key === "Escape") {
@@ -91,10 +92,10 @@ function App() {
 
   const onLogin = (password, email) => {
     Auth.authorize(password, email)
-      .then((data) => {
-        console.log(data);
-        if (data.token) {
-          localStorage.setItem("jwt", data.token);
+      .then((res) => {
+        console.log(res);
+        if (res.token) {
+          localStorage.setItem("jwt", res.token);
         }
         setEmail(email);
         setLoggedIn(true);
@@ -126,8 +127,10 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
+      console.log(loggedIn);
       navigate("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn]);
 
   const onSignOut = () => {
@@ -276,7 +279,11 @@ function App() {
             path="/sign-up"
             element={<Register onRegister={onRegister} />}
           />
-          <Route path="/sign-in" element={<Login onLogin={onLogin} />} />
+
+          <Route 
+            path="/sign-in" 
+            element={<Login onLogin={onLogin} />} />
+
           <Route
             path="*"
             element={
@@ -284,7 +291,6 @@ function App() {
             }
           />
         </Routes>
-
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}

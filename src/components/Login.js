@@ -3,25 +3,23 @@ import { useState } from "react";
 
 const Login = ({ onLogin }) => {
   const [loginData, setLoginData] = useState({
-    password: '',
-    email: '',
-});
-
-// const [message, setMessage] = useState('');
-
-const hendleChangeInput = (e) => {
-  const {name, value} = e.target;
-  setLoginData({
-    ...loginData,
-    [name]: value,
+    password: "",
+    email: "",
   });
-};
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const {  password, email } = loginData;
-  onLogin( password, email );
-};
+  const hendleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setLoginData({
+      ...loginData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { password, email } = loginData;
+    onLogin(password, email);
+  };
 
   return (
     <>

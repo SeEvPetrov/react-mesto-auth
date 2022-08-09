@@ -4,27 +4,23 @@ import Header from "./Header";
 
 const Register = ({ onRegister }) => {
   const [registerData, setRegisterData] = useState({
-    password: '',
-    email: '',
-    
-});
-
-
-// const [message, setMessage] = useState('');
-
-const hendleChangeInput = (e) => {
-  const {name, value} = e.target;
-  setRegisterData({
-    ...registerData,
-    [name]: value,
+    password: "",
+    email: "",
   });
-};
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  const { email, password} = registerData;
-  onRegister( password, email);
-};
+  const hendleChangeInput = (e) => {
+    const { name, value } = e.target;
+    setRegisterData({
+      ...registerData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { email, password } = registerData;
+    onRegister(password, email);
+  };
 
   return (
     <>
