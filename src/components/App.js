@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Route, Routes, useNavigate, Navigate } from "react-router-dom";
 
 import api from "../utils/Api";
-import * as Auth from "../utils/Auth";
+import * as Auth from "../utils/auth";
 
 import Header from "./Header";
 import Main from "./Main";
@@ -59,11 +59,9 @@ function App() {
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem("jwt");
-    console.log(jwt);
     if (jwt) {
       Auth.checkToken(jwt)
         .then((res) => {
-          console.log(res);
           if (res) {
             setLoggedIn(true);
             setEmail(res.data.email);
@@ -93,7 +91,6 @@ function App() {
   const onLogin = (password, email) => {
     Auth.authorize(password, email)
       .then((res) => {
-        console.log(res);
         if (res.token) {
           localStorage.setItem("jwt", res.token);
         }
@@ -101,13 +98,23 @@ function App() {
         setLoggedIn(true);
       })
       .catch((err) => {
+        setIsInfoTooltipOpen(true);
         console.error(err);
       });
   };
 
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     console.log(loggedIn);
+  //     navigate("/");
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loggedIn]);
+
   useEffect(() => {
     tokenCheck();
-    api
+    if (loggedIn) {
+      api
       .getInitialCards()
       .then((res) => {
         setCards(res);
@@ -123,14 +130,9 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
-
-  useEffect(() => {
-    if (loggedIn) {
-      console.log(loggedIn);
       navigate("/");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loggedIn]);
 
   const onSignOut = () => {
@@ -310,6 +312,8 @@ function App() {
           onClose={closeAllPopups}
           isOpen={isInfoTooltipOpen}
           message={message}
+          textSucces={"Вы успешно зарегистрировались!"}
+          textError={"Что-то пошло не так! Попробуйте ещё раз."}
         />
       </CurrentUserContext.Provider>
     </div>

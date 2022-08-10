@@ -19,7 +19,6 @@ const PopupWithForm = ({
           action="#"
           name={name}
           className="popup__form form-edit"
-          noValidate
           onSubmit={onSubmit}
         >
           <fieldset className="popup__form-set">
